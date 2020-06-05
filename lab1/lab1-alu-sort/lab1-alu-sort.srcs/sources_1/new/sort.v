@@ -14,13 +14,20 @@ module sort
 
     reg [N-1:0]a, b;
     wire [2:0]m = 3'b001; // minus
-    wire cf;
+    wire of;
+    wire zf;
+    wire [N-1:0]y;
+    wire sf;
+    assign sf = y[N-1];
+    assign gt = (~of & ~sf & ~zf) | (of & sf & ~zf);
     alu #(.WIDTH(N)) alu_inst
     (
         .m(m),
         .a(a),
         .b(b),
-        .cf(cf)
+        .of(of),
+        .zf(zf),
+        .y(y)
     );
 
     reg [3:0]curr_state;
@@ -43,7 +50,7 @@ module sort
                 curr_state <= 4'b0001;
             end
             4'b0001: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o1 <= o2;
                     a <= o2;
                     o2 <= o1;
@@ -53,7 +60,7 @@ module sort
                 curr_state <= 4'b0010;
             end
             4'b0010: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o1 <= o3;
                     a <= o3;
                     o3 <= o1;
@@ -63,7 +70,7 @@ module sort
                 curr_state <= 4'b0011;
             end
             4'b0011: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o1 <= o4;
                     o4 <= o1;
                     // now o1 contains maximum
@@ -73,7 +80,7 @@ module sort
                 curr_state <= 4'b0100;
             end
             4'b0100: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o2 <= o3;
                     a <= o3;
                     o3 <= o2;
@@ -83,7 +90,7 @@ module sort
                 curr_state <= 4'b0101;
             end
             4'b0101: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o2 <= o4;
                     o4 <= o2;
                     // now o2 contains second-max
@@ -93,7 +100,7 @@ module sort
                 curr_state <= 4'b0110;
             end
             4'b0110: begin
-                if (cf == 1) begin
+                if (gt) begin
                     o3 <= o4;
                     o4 <= o3;
                     // in order now

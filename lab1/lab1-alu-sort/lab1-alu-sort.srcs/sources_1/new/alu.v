@@ -25,32 +25,42 @@ module alu
     // assign zf = (regy == 0);
 
     always @ (a, b, m) begin
-        regcf = 0;
-        regof = 0;
-        regzf = (regy == 0);
         case(m)
             3'b000: begin // add
                 {regcf, regy} = a + b;
-                regof = (!a[WIDTH-1] & !b[WIDTH-1] & y[WIDTH-1]) |
-                 (a[WIDTH-1] & b[WIDTH-1] & !y[WIDTH-1]);
+                regof = (!a[WIDTH-1] & !b[WIDTH-1] & regy[WIDTH-1]) |
+                 (a[WIDTH-1] & b[WIDTH-1] & !regy[WIDTH-1]);
+                regzf = (regy == 0);
             end
             3'b001: begin // sub
                 {regcf, regy} = a - b;
-                regof = (!a[WIDTH-1] & b[WIDTH-1] & y[WIDTH-1]) |
-                 (a[WIDTH-1] & !b[WIDTH-1] & !y[WIDTH-1]);
+                regof = (!a[WIDTH-1] & b[WIDTH-1] & regy[WIDTH-1]) |
+                 (a[WIDTH-1] & !b[WIDTH-1] & !regy[WIDTH-1]);
+                regzf = (regy == 0);
             end
             3'b010: begin // and
                 regy = a & b;
+                regzf = (regy == 0);
+                regcf = 0;
+                regof = 0;
             end
             3'b011: begin // or
                 regy = a | b;
+                regzf = (regy == 0);
+                regcf = 0;
+                regof = 0;
             end
             3'b100: begin // xor
                 regy = a ^ b;
+                regzf = (regy == 0);
+                regcf = 0;
+                regof = 0;
             end
             default: begin // error
                 regy = 0;
                 regzf = 0;
+                regcf = 0;
+                regof = 0;
             end
         endcase
     end

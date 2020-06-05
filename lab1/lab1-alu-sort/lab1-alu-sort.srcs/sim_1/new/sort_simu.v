@@ -30,14 +30,14 @@ module sort_simu();
     end
 
     initial begin 
-        rst = 1;
-        #10
-        rst = 0;
-
         i1 = 9;
         i2 = 3;
         i3 = 8;
         i4 = 1;
+        rst = 1;
+        #10
+        rst = 0;
+
         #(10 * 7)
 
         rst = 1;
@@ -47,17 +47,17 @@ module sort_simu();
         i1 = 8;
         i2 = 10;
         i3 = 15;
-        i4 = 1;
+        i4 = 11;
         #(10 * 7)
 
         rst = 1;
         #10
         rst = 0;
 
-        i1 = 1;
-        i2 = 2;
-        i3 = 3;
-        i4 = 4;
+        i1 = 4;
+        i2 = 3;
+        i3 = 2;
+        i4 = 1;
         #(10 * 7)
 
         #10
